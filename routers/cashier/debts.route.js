@@ -9,6 +9,7 @@ const {
 } = require("../../models/OfflineClient/OfflineConnector");
 const { OfflineService } = require("../../models/OfflineClient/OfflineService");
 const { OfflineProduct } = require("../../models/OfflineClient/OfflineProduct");
+const { StatsionarConnector } = require("../../models/StatsionarClient/StatsionarConnector");
 
 // GET Offline discounts
 module.exports.offline = async (req, res) => {
@@ -138,6 +139,44 @@ module.exports.payment = async (req, res) => {
         await newpayment.save();
 
         const updateConnector = await OfflineConnector.findById(payment.connector);
+        updateConnector.payments.push(newpayment._id);
+        await updateConnector.save()
+
+        res.status(200).json(newpayment);
+    } catch (error) {
+        console.log(error);
+        res.status(501).json({ error: 'Serverda xatolik yuz berdi...', message: error.message })
+    }
+}
+
+module.exports.paymentStatsionar = async (req, res) => {
+    try {
+        const { payment } = req.body;
+
+        delete payment._id
+        payment.client = payment.client._id;
+        delete payment.createdAt;
+        console.log(payment);
+
+        const checkPayment = validatePayment(payment).error;
+        if (checkPayment) {
+            return res.status(400).json({
+                error: checkPayment.message,
+            });
+        }
+
+        // Delete Debets
+        const debts = await StatsionarPayment.find({ connector: payment.connector });
+        for (const debt of debts) {
+            const update = await StatsionarPayment.findByIdAndUpdate(debt._id, {
+                debt: 0,
+            });
+        }
+        // CreatePayment
+        const newpayment = new StatsionarPayment({ ...payment });
+        await newpayment.save();
+
+        const updateConnector = await StatsionarConnector.findById(payment.connector);
         updateConnector.payments.push(newpayment._id);
         await updateConnector.save()
 

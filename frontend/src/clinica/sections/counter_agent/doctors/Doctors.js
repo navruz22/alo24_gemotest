@@ -100,9 +100,15 @@ const Doctors = () => {
 
     const setPageSize =
         (e) => {
-            setCurrentPage(0);
-            setCountPage(e.target.value);
-            setCounterdoctors(searchStorage.slice(0, e.target.value));
+            if (e.target.value === 'all') {
+                setCurrentPage(0);
+                setCountPage(searchStorage.length);
+                setCounterdoctors(searchStorage);
+            } else {
+                setCurrentPage(0);
+                setCountPage(e.target.value);
+                setCounterdoctors(searchStorage.slice(0, e.target.value));
+            }
         }
 
     // ChangeDate
@@ -216,7 +222,8 @@ const Doctors = () => {
                             countPage={countPage}
                             setPageSize={setPageSize}
                             searchClientName={searchClientName}
-                        />
+                            setCurrentPage={setCurrentPage}
+                        /> 
                     </div>
                 </div>
             </div>

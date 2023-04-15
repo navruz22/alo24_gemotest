@@ -18,7 +18,7 @@ module.exports.payment = async (req, res) => {
         const checkPayment = validatePayment(payment).error
         if (checkPayment) {
             return res.status(400).json({
-                error: error.message,
+                error: checkPayment.message,
             })
         }
 
@@ -99,6 +99,7 @@ module.exports.payment = async (req, res) => {
 
         res.status(201).send(newpayment)
     } catch (error) {
+        console.log(error);
         res.status(501).json({ error: 'Serverda xatolik yuz berdi...' })
     }
 }

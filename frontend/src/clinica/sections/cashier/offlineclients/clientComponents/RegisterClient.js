@@ -473,7 +473,6 @@ export const RegisterClient = ({
                                                 onChange={inputPayment}
                                             />
                                         </div>}
-
                                 </div>
                             </div>
                         </div>
