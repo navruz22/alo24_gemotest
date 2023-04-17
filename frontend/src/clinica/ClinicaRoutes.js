@@ -5,6 +5,7 @@ import { ClinicaRegister } from "./loginAndRegister/ClinicaRegister";
 import { DirectorRegistor } from "./loginAndRegister/DirectorRegistor";
 import { Login } from "./loginAndRegister/Login";
 import AdminRoutes from "./admin/AdminRoutes";
+import ClientHistory from "./sections/laborotory/ClientHistory";
 
 export const ClinicaRoutes = (isAuthenticated, user) => {
   return (
@@ -28,6 +29,9 @@ export const ClinicaRoutes = (isAuthenticated, user) => {
       </Route>
       <Route path="/newdirector">
         <DirectorRegistor />
+      </Route>
+      <Route path="/clienthistory/:id">
+        <ClientHistory />
       </Route>
       <Route path="/admin">
         <AdminRoutes isAuthenticated={isAuthenticated} user={user} />

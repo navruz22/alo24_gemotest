@@ -9,6 +9,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { useHttp } from "../../../hooks/http.hook";
 import Print from "./Print";
 import { useReactToPrint } from 'react-to-print'
+import QRCode from "qrcode"
 
 const AdoptionTemplate = () => {
   // const clientId = useParams().clientid
@@ -60,38 +61,6 @@ const AdoptionTemplate = () => {
     }
   }, [request, notify])
 
-  // const [tablesSelect, setTablesSelect] = useState([])
-
-  // const getServices = useCallback(async () => {
-  //   try {
-  //     const data = await request(
-  //       `/api/doctor/table/services`,
-  //       'POST',
-  //       { clinica: auth.clinica._id, doctor: auth.user },
-  //       {
-  //         Authorization: `Bearer ${auth.token}`,
-  //       },
-  //     )
-  //     setTablesSelect([...data].map(service => {
-  //       return {
-  //         label: service.name,
-  //         value: service._id,
-  //         column: service.column,
-  //         tables: service.tables,
-  //       }
-  //     }))
-  //   } catch (error) {
-  //     notify({
-  //       title: error,
-  //       description: '',
-  //       status: 'error',
-  //     })
-  //   }
-  // }, [
-  //   request,
-  //   auth,
-  //   notify
-  // ])
 
   const uploadFile = async (e, serviceid) => {
     const files = e.target.files[0]
@@ -243,47 +212,18 @@ const AdoptionTemplate = () => {
   //===========================================================
   //===========================================================
 
-  useEffect(() => {
-    // const serviceTypes = []
-    // const serviceIdArr = []
-    // for (const service of services) {
-    //   const check = service.serviceid.servicetype._id;
-    //   if (!serviceIdArr.includes(check)) {
-    //     serviceTypes.push({
-    //       servicetypeid: check,
-    //       servicetypename: service.serviceid.servicetype.name,
-    //       services: [service],
-    //       column: service.column
-    //     })
-    //     serviceIdArr.push(check);
-    //   } else {
-    //     if (service.column && service.tables && service.tables.length > 0) {
-    //       const checkCols = Object.keys(service.column).filter(el => el.includes('col')).length;
-    //       const index = serviceTypes.findIndex(el =>
-    //         el.column && el.servicetypeid === check
-    //         && Object.keys(el.column).filter(el => el.includes('col')).length === checkCols)
-    //       if (index >= 0) {
-    //         serviceTypes[index].services.push(service)
-    //         serviceTypes[index].column = service.column
-    //       } else {
-    //         serviceTypes.push({
-    //           servicetypeid: check,
-    //           servicetypename: service.serviceid.servicetype.name,
-    //           services: [service],
-    //           column: service.column
-    //         })
-    //       }
-    //     } else {
-    //       serviceTypes.push({
-    //         servicetypeid: check,
-    //         servicetypename: service.serviceid.servicetype.name,
-    //         services: [service],
-    //       })
-    //     }
-    //   }
-    // }
-    // setSections(serviceTypes);
+  const [qr, setQr] = useState()
 
+  useEffect(() => {
+    if (connector && baseUrl) {
+      QRCode.toDataURL(`${baseUrl}/clienthistory/${connector._id}`)
+        .then(data => {
+          setQr(data)
+        })
+    }
+  }, [connector, baseUrl])
+
+  useEffect(() => {
     const servicetypesAll = services.reduce((prev, el) => {
       if (!prev.includes(el.serviceid.servicetype.name)) {
         prev.push(el.serviceid.servicetype.name)
@@ -331,12 +271,9 @@ const AdoptionTemplate = () => {
     setSections([...servicetypes, ...servicesmore])
 
   }, [services]);
-  console.log(sections);
+
   useEffect(() => {
-    // if (!t) {
-    // getServices()
     getBaseUrl()
-    // }
   }, [getBaseUrl]);
 
   return (
@@ -352,6 +289,7 @@ const AdoptionTemplate = () => {
             connector={connector}
             client={client}
             sections={sections}
+            qr={qr}
           />
         </div>
       </div>
@@ -400,11 +338,11 @@ const AdoptionTemplate = () => {
                 {auth?.clinica?.name2}
               </pre>
             </div>
-            <div className="col-6" style={{ textAlign: "center" }}>
+            {/* <div className="col-6" style={{ textAlign: "center" }}>
               <p className="text-end m-0">
-                {/* <img width="120" src={qr && qr} alt="QR" /> */}
+                <img width="120" src={qr && qr} alt="QR" />
               </p>
-            </div>
+            </div> */}
           </div>
           <div className="row">
             <div className="col-12" style={{ padding: "0" }}>

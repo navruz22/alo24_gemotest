@@ -210,28 +210,6 @@ module.exports.getLabClients = async (req, res) => {
         services = [...offline, ...statsionar]
 
         if (services.length > 0) {
-            // for (const i in services) {
-            //     if (i == 0) {
-            //         client.client = services[i].client;
-            //         client.connector = services[i].connector;
-            //         client.services.push(services[i]);
-            //     } else {
-            //         if (services[i - 1].client._id === services[i].client._id) {
-            //             client.services.push(services[i]);
-            //         } else {
-            //             clients.push(client);
-            //             client = {
-            //                 client: {},
-            //                 connector: {},
-            //                 services: [],
-            //             };
-            //             client.client = services[i].client;
-            //             client.connector = services[i].connector;
-            //             client.services.push(services[i]);
-            //         }
-            //     }
-            // }
-
             let connectorsId = []
             for (const service of services) {
                 const check = connectorsId.includes(String(service.connector._id));
@@ -363,7 +341,7 @@ module.exports.getLabClientsForApprove = async (req, res) => {
         }
 
         const response = clients.filter(client => client.connector.payments.length > 0)
-        
+
         res.status(200).send(response);
     } catch (error) {
         console.log(error);
@@ -497,3 +475,48 @@ module.exports.saveConclusion = async (req, res) => {
     }
 }
 
+
+module.exports.getClientHistory = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        const connector = await OfflineConnector.findById(id)
+            .select('-__v -updatedAt -isArchive')
+            .populate('client')
+            .populate('clinica')
+            .populate({
+                path: "services",
+                select: "-__v -updatedAt -isArchive",
+                populate: {
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                }
+            })
+            .populate({
+                path: "services",
+                select: "-__v -updatedAt -isArchive",
+                populate: {
+                    path: "department",
+                    select: "probirka",
+                }
+            })
+            .populate({
+                path: "services",
+                select: "-__v -updatedAt -isArchive",
+                populate: {
+                    path: "service",
+                    select: "price",
+                }
+            })
+
+        res.status(200).json(connector)
+
+    } catch (error) {
+        console.log(error);
+        res.status(501).json({ error: "Serverda xatolik yuz berdi..." });
+    }
+}

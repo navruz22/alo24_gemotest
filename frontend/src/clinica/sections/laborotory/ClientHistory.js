@@ -1,62 +1,63 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useToast } from "@chakra-ui/react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useReactToPrint } from "react-to-print";
+import { AuthContext } from "../../context/AuthContext";
+import { useHttp } from "../../hooks/http.hook";
 
-const Print = ({ client, connector, sections, baseUrl, clinica, qr }) => {
-    const location = useLocation()
+
+const Print = ({ client, connector, sections, baseUrl, clinica }) => {
 
     const [printSections, setPrintSections] = useState([])
 
     useEffect(() => {
-        if (location.pathname.includes('alo24/adoption')) {
-            setPrintSections([...sections])
-        } else {
-            const servicetypesAll = sections.reduce((prev, el) => {
-                if (!prev.includes(el.serviceid.servicetype.name)) {
-                  prev.push(el.serviceid.servicetype.name)
-                }
-                return prev;
-              }, [])
-          
-              let servicetypes = []
-              for (const type of servicetypesAll) {
-                sections.map((service) => {
-                  if (service.column && service.tables.length > 0) {
-                    if (service.serviceid.servicetype.name === type && service.tables.length <= 2) {
-                      const cols = Object.keys(service.column).filter(c => c.includes('col') && service.column[c]).length;
-                      const isExist = servicetypes.findIndex(i => i.servicetype === type && i.cols === cols)
-                      if (isExist >= 0) {
-                        servicetypes[isExist].services.push(service); 
-                      } else {
-                        servicetypes.push({
-                          column: service.column,
-                          servicetype: type,
-                          services: [service],
-                          cols: cols
-                        })
-                      }
-                    }
-                  }
-                  return service;
-                })
-              }
-          
-              const servicesmore = [...servicetypesAll].reduce((prev, el) => {
-                sections.map((service) => {
-                  if (service.serviceid.servicetype.name === el && service.tables.length > 2) {
-                    prev.push({
-                      column: service.column,
-                      servicetype: service.service.name,
-                      services: [service]
-                    })
-                  }
-                  return service;
-                })
-                return prev;
-              }, [])
-          
-              setPrintSections([...servicetypes, ...servicesmore])
+        const servicetypesAll = sections.reduce((prev, el) => {
+            if (!prev.includes(el.serviceid.servicetype.name)) {
+                prev.push(el.serviceid.servicetype.name)
             }
-    }, [sections, location])
+            return prev;
+        }, [])
+
+        let servicetypes = []
+        for (const type of servicetypesAll) {
+            sections.map((service) => {
+                if (service.column && service.tables.length > 0) {
+                    if (service.serviceid.servicetype.name === type && service.tables.length <= 2) {
+                        const cols = Object.keys(service.column).filter(c => c.includes('col') && service.column[c]).length;
+                        const isExist = servicetypes.findIndex(i => i.servicetype === type && i.cols === cols)
+                        if (isExist >= 0) {
+                            servicetypes[isExist].services.push(service);
+                        } else {
+                            servicetypes.push({
+                                column: service.column,
+                                servicetype: type,
+                                services: [service],
+                                cols: cols
+                            })
+                        }
+                    }
+                }
+                return service;
+            })
+        }
+
+        const servicesmore = [...servicetypesAll].reduce((prev, el) => {
+            sections.map((service) => {
+                if (service.serviceid.servicetype.name === el && service.tables.length > 2) {
+                    prev.push({
+                        column: service.column,
+                        servicetype: service.service.name,
+                        services: [service]
+                    })
+                }
+                return service;
+            })
+            return prev;
+        }, [])
+
+        setPrintSections([...servicetypes, ...servicesmore])
+
+    }, [sections])
 
     return (
         <div className="px-2 pt-4 bg-white">
@@ -99,19 +100,19 @@ const Print = ({ client, connector, sections, baseUrl, clinica, qr }) => {
                             {clinica?.name}
                         </pre>
                     </div>
-                    <div style={{textAlign: "center" }}>
-                        <img style={{ width: "150px"}}  src={baseUrl + '/api/upload/file/' + clinica?.image} alt="logo" />
+                    <div style={{ textAlign: "center" }}>
+                        <img style={{ width: "150px" }} src={baseUrl + '/api/upload/file/' + clinica?.image} alt="logo" />
                     </div>
                     <div className="" style={{ textAlign: "center" }}>
                         <pre className="" style={{ fontFamily: "-moz-initial", border: 'none', outline: "none" }}>
                             {clinica?.name2}
                         </pre>
                     </div>
-                    <div className="" style={{ textAlign: "center" }}>
+                    {/* <div className="" style={{ textAlign: "center" }}>
                         <p className="text-end m-0">
-                            <img width="100" src={qr && qr} alt="QR" />
+                            <img width="100" src={QRcode} alt="QR" />
                         </p>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="">
                     <div className="" style={{ padding: "0" }}>
@@ -303,7 +304,7 @@ const Print = ({ client, connector, sections, baseUrl, clinica, qr }) => {
                                                 </pre> </td>
                                                 <td className={`border-[1px] text-[16px] border-black py-1 px-[12px]`}>
                                                     <pre
-                                                        style={{fontFamily: "sans-serif" }}
+                                                        style={{ fontFamily: "sans-serif" }}
                                                         className="border-none outline-none"
                                                     >
                                                         {table?.col2}
@@ -350,4 +351,112 @@ const Print = ({ client, connector, sections, baseUrl, clinica, qr }) => {
     )
 }
 
-export default Print
+const ClientHistory = () => {
+
+    const { id } = useParams();
+    console.log(id);
+
+    const componentRef = useRef()
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    })
+
+    const { request } = useHttp();
+    const auth = useContext(AuthContext);
+
+    const toast = useToast();
+
+    const notify = useCallback(
+        (data) => {
+            toast({
+                title: data.title && data.title,
+                description: data.description && data.description,
+                status: data.status && data.status,
+                duration: 5000,
+                isClosable: true,
+                position: "top-right",
+            });
+        },
+        [toast]
+    );
+
+    const [connector, setConnector] = useState({})
+    const [client, setClient] = useState({})
+    const [services, setServices] = useState([])
+    console.log(services);
+    const getClientHistory = useCallback(
+        async (id) => {
+            try {
+                const data = await request(
+                    `/api/labaratory/client/history/get`,
+                    "POST",
+                    {
+                        id: id
+                    }
+                );
+                setConnector({ ...data })
+                setClient({ ...data.client })
+                setServices([...data.services])
+            } catch (error) {
+                notify({
+                    title: error,
+                    description: "",
+                    status: "error",
+                });
+            }
+        },
+        [request, notify]
+    );
+
+
+
+    const [baseUrl, setBaseUrl] = useState()
+
+    const getBaseUrl = useCallback(async () => {
+        try {
+            const data = await request('/api/baseurl', 'GET', null)
+            setBaseUrl(data.baseUrl)
+        } catch (error) {
+            notify({
+                title: error,
+                description: '',
+                status: 'error',
+            })
+        }
+    }, [request, notify])
+
+    useEffect(() => {
+        getClientHistory(id)
+    }, [getClientHistory]);
+
+    useEffect(() => {
+        getBaseUrl()
+    }, [getBaseUrl]);
+
+
+    return <>
+        <div className="container p-4 bg-white text-center" style={{ fontFamily: "times" }}>
+            <div className="row">
+                <div className="col-12 text-center my-4">
+                    <button className="btn btn-info px-5" onClick={handlePrint} >Chop etish</button>
+                </div>
+            </div>
+        </div>
+        {services.length > 0 && <div className="d-none">
+            <div
+                ref={componentRef}
+                className="container p-4"
+            >
+                <Print
+                    baseUrl={baseUrl}
+                    clinica={auth?.clinica}
+                    connector={connector}
+                    client={client}
+                    sections={services}
+                />
+            </div>
+        </div>}
+    </>
+}
+
+export default ClientHistory;

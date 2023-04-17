@@ -240,7 +240,7 @@ module.exports.getStatsionarAll = async (req, res) => {
       })
         .select('-__v -updatedAt -isArchive')
         .populate('clinica', 'name phone1 image')
-        .populate("client", "lastname firstname born id phone address")
+        .populate("client", "lastname firstname born id id2 phone address")
         .populate({
           path: "services",
           select: "service serviceid accept refuse createdAt column tables turn connector client files department",
@@ -321,7 +321,7 @@ module.exports.getStatsionarAll = async (req, res) => {
       })
         .select('-__v -updatedAt -isArchive')
         .populate('clinica', 'name phone1 image')
-        .populate("client", "lastname firstname born id phone address")
+        .populate("client", "lastname firstname born id id2 phone address")
         .populate({
           path: "services",
           select: "service serviceid accept refuse column createdAt tables turn connector client files department",

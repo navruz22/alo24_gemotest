@@ -5,6 +5,7 @@ import { Conclusion } from "./conclusion/Conclusion";
 import Tables from "./tables/Tables";
 import AdoptionTemplate from "./components/AdoptionTemplate";
 import { BloodTest } from "./bloodtest/BloodTest";
+import ClientHistory from "./ClientHistory";
 
 export const LaborotoryRouter = () => {
   return (
