@@ -35,6 +35,7 @@ const clinica = new Schema(
 function validateClinica(clinica) {
   const schema = Joi.object({
     name: Joi.string().required(),
+    name2: Joi.string(),
     organitionName: Joi.string(),
     image: Joi.string().required(),
     phone1: Joi.string().required(),
