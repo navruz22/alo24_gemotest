@@ -218,7 +218,7 @@ const AdoptionTemplate = () => {
 
   useEffect(() => {
     if (connector && baseUrl) {
-      QRCode.toDataURL(`${baseUrl}/clienthistory/${connector._id}`)
+      QRCode.toDataURL(`http://localhost:3000/clienthistory/${connector._id}`)
         .then(data => {
           setQr(data)
         })
@@ -329,22 +329,22 @@ const AdoptionTemplate = () => {
               </p>
             </div>
           </div>}
-          <div className="row" style={{ fontSize: "20pt" }}>
-            <div className="col-6 pt-2" style={{ textAlign: "center" }}>
+          <div className="flex justify-between items-center" style={{ fontSize: "20pt" }}>
+            <div className="pt-2" style={{ textAlign: "center" }}>
               <pre className="pt-3" style={{ fontFamily: "-moz-initial" }}>
                 {auth?.clinica?.name}
               </pre>
             </div>
-            <div className="col-6 pt-2" style={{ textAlign: "center" }}>
+            <div className="pt-2" style={{ textAlign: "center" }}>
               <pre className="pt-3" style={{ fontFamily: "-moz-initial" }}>
                 {auth?.clinica?.name2}
               </pre>
             </div>
-            {/* <div className="col-6" style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center" }}>
               <p className="text-end m-0">
                 <img width="120" src={qr && qr} alt="QR" />
               </p>
-            </div> */}
+            </div>
           </div>
           <div className="row">
             <div className="col-12" style={{ padding: "0" }}>

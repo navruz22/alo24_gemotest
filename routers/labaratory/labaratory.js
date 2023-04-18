@@ -512,6 +512,64 @@ module.exports.getClientHistory = async (req, res) => {
                     select: "price",
                 }
             })
+            .populate({
+                path: "services",
+                select: "-__v -updatedAt -isArchive",
+                populate: {
+                    path: "templates",
+                    select: "name template",
+                }
+            })
+            .lean()
+
+        if (!connector) {
+            const statsionarconnector = await StatsionarConnector.findById(id)
+                .select('-__v -updatedAt -isArchive')
+                .populate('client')
+                .populate('clinica')
+                .populate({
+                    path: "services",
+                    select: "-__v -updatedAt -isArchive",
+                    populate: {
+                        path: "serviceid",
+                        select: "servicetype",
+                        populate: {
+                            path: "servicetype",
+                            select: "name"
+                        }
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "-__v -updatedAt -isArchive",
+                    populate: {
+                        path: "department",
+                        select: "probirka",
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "-__v -updatedAt -isArchive",
+                    populate: {
+                        path: "service",
+                        select: "price",
+                    }
+                })
+                .populate({
+                    path: "dailys",
+                    select: "probirka"
+                })
+                .populate({
+                    path: "services",
+                    select: "-__v -updatedAt -isArchive",
+                    populate: {
+                        path: "templates",
+                        select: "name template",
+                    }
+                })
+                .lean()
+            return res.status(200).json(statsionarconnector)
+        }
 
         res.status(200).json(connector)
 
