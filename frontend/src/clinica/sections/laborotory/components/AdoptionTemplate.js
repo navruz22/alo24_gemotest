@@ -218,7 +218,7 @@ const AdoptionTemplate = () => {
 
   useEffect(() => {
     if (connector && baseUrl) {
-      QRCode.toDataURL(`http://localhost:3000/clienthistory/${connector._id}`)
+      QRCode.toDataURL(`${baseUrl}/clienthistory/${connector._id}`)
         .then(data => {
           setQr(data)
         })
