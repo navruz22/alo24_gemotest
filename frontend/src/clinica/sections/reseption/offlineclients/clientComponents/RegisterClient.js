@@ -29,7 +29,9 @@ export const RegisterClient = ({
     products,
     loading,
     clientDate,
-    servicetypes
+    servicetypes,
+    isCounterDoctor,
+    setIsCounterDoctor
 }) => {
 
     const [services, setServices] = useState([])
@@ -70,7 +72,7 @@ export const RegisterClient = ({
         },
         [servicetypes],
     )
-    
+
     useEffect(() => {
         if (servicetypes) {
             getServices('all')
@@ -277,7 +279,27 @@ export const RegisterClient = ({
                                 </div>
                                 <div className="col-sm-6 col-12">
                                     <div className="form-group">
-                                        <label htmlFor="biO">Yullanma</label>
+                                        <label style={{width: "100%", display: "flex", justifyContent: "space-between"}} htmlFor="biO">
+                                            Yullanma
+                                            <div className="custom-control custom-radio custom-control-inline">
+                                                    <input
+                                                        checked={isCounterDoctor}
+                                                        onChange={() => {
+                                                            setIsCounterDoctor(!isCounterDoctor)
+                                                        }}
+                                                        type="radio"
+                                                        id="yullanmasiz"
+                                                        name="yullanmasiz"
+                                                        className="custom-control-input"
+                                                    />
+                                                    <label
+                                                        className="custom-control-label"
+                                                        htmlFor="yullanmasiz"
+                                                    >
+                                                        Yullanmasiz
+                                                    </label>
+                                            </div>
+                                        </label>
                                         <Select
                                             onChange={changeCounterDoctor}
                                             // styles={CustomStyle}

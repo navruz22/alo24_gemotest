@@ -411,7 +411,7 @@ const ClientHistory = () => {
     const [connector, setConnector] = useState({})
     const [client, setClient] = useState({})
     const [services, setServices] = useState([])
-    console.log(services);
+    
     const getClientHistory = useCallback(
         async (id) => {
             try {
@@ -436,7 +436,7 @@ const ClientHistory = () => {
         [request, notify]
     );
 
-
+    console.log(auth);
 
     const [baseUrl, setBaseUrl] = useState()
 

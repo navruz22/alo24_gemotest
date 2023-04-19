@@ -315,11 +315,14 @@ export const OfflineClients = () => {
     }, [request, auth, notify]);
 
     const [counterdoctor, setCounterDoctor] = useState(null);
+    const [isCounterDoctor, setIsCounterDoctor] = useState(false)
 
     const changeCounterDoctor = (e) => {
         if (e.value === "delete") {
             setCounterDoctor(null)
+
         } else {
+            setIsCounterDoctor(false);
             setCounterDoctor(e.value);
         }
     };
@@ -518,6 +521,7 @@ export const OfflineClients = () => {
         setSelectedServices([]);
         setClientDate(new Date().toISOString().slice(0, 10))
         setIsAddConnector(false);
+        setIsCounterDoctor(false)
     }, [auth]);
 
     const checkData = () => {
@@ -532,11 +536,20 @@ export const OfflineClients = () => {
         if (checkProductsData(newproducts)) {
             return notify(checkProductsData(newproducts));
         }
+        if (!counterdoctor && !isCounterDoctor) {
+            return notify(
+                {
+                    title: 'Diqqat! Yullanma shifokor kiritilmagan.',
+                    description: 'Iltimos Yullanma shifokor ismini kiriting.',
+                    status: 'error',
+                }
+            )
+        }
         setModal(true);
     };
     //====================================================================
     //====================================================================
-
+    console.log(isCounterDoctor);
     //====================================================================
     //====================================================================
     // CreateHandler
@@ -729,7 +742,7 @@ export const OfflineClients = () => {
     //====================================================================
     //====================================================================
 
-    
+
     //====================================================================
     //====================================================================
     // ChangeDate
@@ -774,7 +787,7 @@ export const OfflineClients = () => {
         beginDay,
         endDay,
     ]);
-    
+
 
     //====================================================================
     //====================================================================
@@ -828,6 +841,8 @@ export const OfflineClients = () => {
                                 setClientDate={setClientDate}
                                 setIsAddConnector={setIsAddConnector}
                                 servicetypes={serviceTypes}
+                                isCounterDoctor={isCounterDoctor}
+                                setIsCounterDoctor={setIsCounterDoctor}
                             />
                         </div>
                         <TableClients
