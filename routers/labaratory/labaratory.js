@@ -207,6 +207,8 @@ module.exports.getLabClients = async (req, res) => {
                 })
         }
 
+        console.log(statsionar);
+
         services = [...offline, ...statsionar]
 
         if (services.length > 0) {

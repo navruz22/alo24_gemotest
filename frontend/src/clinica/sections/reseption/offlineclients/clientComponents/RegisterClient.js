@@ -164,7 +164,7 @@ export const RegisterClient = ({
                                                 name="phone"
                                             />
                                         </div>
-                                    </div>
+                                    </div> 
                                 </div>
                                 <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div className="form-group">
@@ -294,7 +294,7 @@ export const RegisterClient = ({
                                                     />
                                                     <label
                                                         className="custom-control-label"
-                                                        htmlFor="yullanmasiz"
+                                                        htmlFor="yullanmasiz" 
                                                     >
                                                         Yullanmasiz
                                                     </label>
