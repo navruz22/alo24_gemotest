@@ -244,7 +244,7 @@ export const TableClients = ({
                   </div>
                 </th>
               </tr>
-            </thead>
+            </thead> 
             <tbody>
               {currentConnectors.map((connector, key) => {
                 return (

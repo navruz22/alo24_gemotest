@@ -39,7 +39,7 @@ module.exports.register = async (req, res) => {
         const checkClient = validateOnlineClient(client).error
         if (checkClient) {
             return res.status(400).json({
-                error: error.message,
+                error: checkClient.message,
             })
         }
 
@@ -47,7 +47,7 @@ module.exports.register = async (req, res) => {
 
         if (checkOnlineConnector) {
             return res.status(400).json({
-                error: error.message,
+                checkOnlineConnector: error.message,
             })
         }
 
@@ -166,6 +166,7 @@ module.exports.register = async (req, res) => {
 
         res.status(201).send(response)
     } catch (error) {
+        console.log(error);
         res.status(501).json({error: 'Serverda xatolik yuz berdi...'})
     }
 }
