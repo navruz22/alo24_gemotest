@@ -68,10 +68,18 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica",
+                    select: "probirka createdAt accept clinica payments",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
                     }
                 })
                 .populate("client", "lastname firstname born id phone address")
@@ -99,7 +107,7 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica dailys",
+                    select: "probirka createdAt accept clinica payments dailys",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -107,7 +115,15 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica dailys",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
                     populate: {
                         path: "dailys",
                         select: "probirka"
@@ -145,10 +161,18 @@ module.exports.getLabClients = async (req, res) => {
                 .populate("service", "price")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica",
+                    select: "probirka createdAt accept clinica payments",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
                     }
                 })
                 .populate({
@@ -177,7 +201,7 @@ module.exports.getLabClients = async (req, res) => {
                 .populate("service", "price")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica dailys",
+                    select: "probirka createdAt accept clinica payments dailys",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -185,7 +209,15 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica dailys",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
                     populate: {
                         path: "dailys",
                         select: "probirka"

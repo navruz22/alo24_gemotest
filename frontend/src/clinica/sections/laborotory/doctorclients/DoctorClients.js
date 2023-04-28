@@ -200,9 +200,9 @@ export const DoctorClients = () => {
     (e) => {
       setCurrentPage(0);
       setCountPage(e.target.value);
-      setCurrentDoctorClients(doctorClients.slice(0, countPage));
+      setCurrentDoctorClients(doctorClients.slice(0, e.target.value));
     },
-    [countPage, doctorClients]
+    [doctorClients]
   );
 
   //====================================================================
