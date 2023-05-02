@@ -37,6 +37,9 @@ const { OfflineService } = require('../../models/OfflineClient/OfflineService')
 const { OfflineConnector } = require('../../models/OfflineClient/OfflineConnector')
 const { OfflinePayment } = require('../../models/Cashier/OfflinePayment')
 const { OfflineClient } = require('../../models/OfflineClient/OfflineClient')
+require('../../models/Users')
+require('../../models/Services/Department')
+require('../../models/Services/ServiceType')
 // register
 module.exports.register = async (req, res) => {
     try {
@@ -757,12 +760,39 @@ module.exports.getAllReseption = async (req, res) => {
             },
         })
             .select('client doctor createdAt services products room diagnosis')
-            .populate('client', 'firstname lastname fullname born phone id address gender')
-            .populate("services", 'service pieces createdAt')
+            .populate('client', 'firstname lastname fullname born phone national id address gender')
+            .populate({
+                path: "services",
+                select: "service serviceid accept refuse column createdAt tables turn connector client files department",
+                populate: {
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                }
+            })
+            .populate({
+                path: "services",
+                select: "service serviceid accept refuse column createdAt tables turn connector client files department",
+                populate: {
+                    path: "templates",
+                    select: "name template",
+                }
+            })
+            .populate({
+                path: "services",
+                select: "service serviceid accept refuse column createdAt tables turn connector client files department",
+                populate: {
+                    path: 'department',
+                    select: "probirka"
+                }
+            })
             .populate("products", 'product pieces createdAt')
             .populate("doctor", 'firstname lastname')
-            .populate("room", '')
-            .sort({ _id: -1 })
+            .populate("room")
+            .sort({ createdAt: -1 })
         res.status(200).send(connectors)
     } catch (error) {
         res.status(501).json({ error: 'Serverda xatolik yuz berdi...' })
