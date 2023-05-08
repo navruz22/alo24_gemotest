@@ -565,7 +565,7 @@ const AdoptionTemplate = () => {
                                         } else {
                                           document.getElementById(`result${index}-${ind}-${key + 1}`).focus()
                                         }
-                                      } 
+                                      }
                                       if (e.key === "ArrowUp") {
                                         if (key === 0 && ind === 0 && index === 0) {
                                           document.getElementById(`result${sections.length - 1}-${sections[sections.length - 1].services.length - 1}-${sections[sections.length - 1].services[sections[sections.length - 1].services.length - 1].tables.length - 1}`).focus()

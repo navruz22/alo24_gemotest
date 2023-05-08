@@ -119,3 +119,34 @@ code {
 }
 
 /* table */
+
+table.report-container {
+  page-break-after: always;
+}
+
+
+thead.report-header {
+  display: table-header-group;
+
+}
+
+tfoot.report-footer {
+  display: table-footer-group;
+
+}
+
+table.report-container .box {
+  page-break-inside: avoid;
+}
+
+@media print {
+  thead img {
+      page-break-inside: auto !important;
+  }
+
+  thead.report-header {
+      display: table-header-group;
+
+  }
+}
+
