@@ -80,11 +80,15 @@ module.exports.register = async (req, res) => {
                         clinica: connector.clinica,
                         probirka: { $ne: 0 },
                         createdAt: {
-                            $gte: new Date(new Date().setUTCDate(0, 0, 0, 0)),
+                            $gte:
+                                new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                            $lt: new Date(new Date().getFullYear(),
+                                new Date().getMonth(), new Date().getDate() + 1)
                         },
                     })
                 ).length + 1
         }
+
 
         const newconnector = new OfflineConnector({
             ...connector,
