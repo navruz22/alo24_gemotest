@@ -471,66 +471,77 @@ export const OfflineClients = () => {
         setProducts(prods)
     }
 
+    console.log(services);
+
     const changeDiscount = (e) => {
         let total = 0
         let servs = []
-        for (const i in services) {
-            if (services[i].payment) {
-                total += services[i].service.price * services[i].pieces
-                servs.push(services[i]._id)
-            }
-        }
-
-        let disc = 0
-        if (e.target.value !== '')
-            disc = parseInt(e.target.value)
-
-        if (disc > total) {
-            e.target.value = parseInt(parseInt(e.target.value) / 10)
+        if (connector.probirka === 0) {
             return notify({
                 title:
-                    "Diqqat! Chegirma summasi umumiy xizmatlar summasidan oshmasligi kerak!",
+                    "Diqqat! Probirkasiz mijozga chegirma berilmaydi!",
                 description: '',
                 status: 'error',
             })
-        }
-
-        if (disc <= 100) {
-            setDiscount({
-                ...discount,
-                procient: disc,
-                total,
-                discount: parseInt((total * disc) / 100),
-                services: [...servs]
-            })
-            setPayment({
-                ...payment,
-                total: totalpayment,
-                debt: 0,
-                card: 0,
-                cash: 0,
-                transfer: 0,
-                type: '',
-                payment: 0
-            })
         } else {
-            setDiscount({
-                ...discount,
-                procient: 0,
-                discount: disc,
-                total,
-                services: [...servs]
-            })
-            setPayment({
-                ...payment,
-                total: totalpayment,
-                debt: 0,
-                card: 0,
-                cash: 0,
-                transfer: 0,
-                type: '',
-                payment: 0,
-            })
+            for (const i in services) {
+                if (services[i].payment && services[i].department.probirka) {
+                    total += services[i].service.price * services[i].pieces
+                    servs.push(services[i]._id)
+                }
+            }
+    
+            let disc = 0
+            if (e.target.value !== '')
+                disc = parseInt(e.target.value)
+    
+            if (disc > total) {
+                e.target.value = parseInt(parseInt(e.target.value) / 10)
+                return notify({
+                    title:
+                        "Diqqat! Chegirma summasi umumiy xizmatlar summasidan oshmasligi kerak!",
+                    description: '',
+                    status: 'error',
+                })
+            }
+    
+            if (disc <= 100) {
+                setDiscount({
+                    ...discount,
+                    procient: disc,
+                    total,
+                    discount: parseInt((total * disc) / 100),
+                    services: [...servs]
+                })
+                setPayment({
+                    ...payment,
+                    total: totalpayment,
+                    debt: 0,
+                    card: 0,
+                    cash: 0,
+                    transfer: 0,
+                    type: '',
+                    payment: 0
+                })
+            } else {
+                setDiscount({
+                    ...discount,
+                    procient: 0,
+                    discount: disc,
+                    total,
+                    services: [...servs]
+                })
+                setPayment({
+                    ...payment,
+                    total: totalpayment,
+                    debt: 0,
+                    card: 0,
+                    cash: 0,
+                    transfer: 0,
+                    type: '',
+                    payment: 0,
+                })
+            }
         }
     }
 
