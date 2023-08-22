@@ -780,8 +780,8 @@ module.exports.getAllReseption = async (req, res) => {
             connectors = await OfflineConnector.find({
                 clinica,
                 createdAt: {
-                    $gte: beginDay,
-                    $lt: endDay,
+                    $gte: new Date(new Date(beginDay).getFullYear(), new Date(beginDay).getMonth(), new Date(beginDay).getDate()),
+                    $lt: new Date(new Date(endDay).getFullYear(), new Date(endDay).getMonth(), new Date(endDay).getDate() + 1),
                 },
             })
                 .select('probirka client accept services products createdAt totalprice')

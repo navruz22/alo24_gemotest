@@ -18,6 +18,7 @@ export const OfflineClients = () => {
     const [endDay, setEndDay] = useState(
         new Date(new Date().setDate(new Date().getDate() + 1))
     );
+    
     //====================================================================
     //====================================================================
     // MODAL
