@@ -203,9 +203,14 @@ export const Conclusion = () => {
   const handleConclusion = async () => {
     const send = serviceClients.reduce((prev, el) => {
       let service = el.services.filter(item => item.tables.length > 0)
-      prev.push(...service);
+      prev.push(...service.map(el => ({
+        _id: el?._id,
+        accept: el?.accept,
+        tables: el?.tables
+      })));
       return prev;
     }, [])
+    console.log(send);
     try {
       const data = await request(
         `/api/labaratory/conclusion/save`,
