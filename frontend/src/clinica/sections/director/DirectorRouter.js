@@ -24,6 +24,7 @@ import { StatsionarReport } from "./report/StatsionarReport";
 import { Departments } from "./services/Departments";
 import { ProductConnectors } from "./services/ProductConnector";
 import { Products } from "./services/Products";
+import { ProductsReport } from "./services/ProductsReport";
 import { Rooms } from "./services/Rooms";
 import { Services } from "./services/Services";
 import { ServiceType } from "./services/ServiceType";
@@ -58,6 +59,9 @@ export const DirectorRouter = () => {
         </Route>
         <Route path="/alo24/products">
           <Products />
+        </Route>
+        <Route path="/alo24/products_report">
+          <ProductsReport />
         </Route>
         <Route path="/alo24/recieptproducts">
           <Warehouses />

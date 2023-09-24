@@ -112,19 +112,7 @@ module.exports.register = async (req, res) => {
                 })
             }
 
-            //=========================================================
-            // Product decrement
-            const productconnectors = await ProductConnector.find({
-                clinica: client.clinica,
-                service: service.serviceid,
-            })
-
-            for (const productconnector of productconnectors) {
-                const product = await Product.findById(productconnector.product)
-                product.total = product.total - productconnector.pieces * service.pieces
-                await product.save()
-            }
-
+            
             //=========================================================
             // TURN
             var turn = 0
@@ -193,6 +181,34 @@ module.exports.register = async (req, res) => {
 
             newconnector.services.push(newservice._id)
             await newconnector.save()
+
+            const productconnectors = await ProductConnector.find({
+                clinica: client.clinica,
+                service: service.serviceid,
+            })
+
+            for (const productconnector of productconnectors) {
+                const product = await Product.findById(productconnector.product)
+                product.total = product.total - productconnector.pieces * service.pieces
+                await product.save()
+
+                const newproduct = new OfflineProduct({
+                    pieces: productconnector.pieces * service.pieces,
+                    productid: product._id,
+                    client: newclient._id,
+                    connector: newconnector._id,
+                    product: {
+                        _id: product._id,
+                        name: product.name,  
+                        price: product.price
+                    },
+                    service: newservice._id,
+                    clinica: product.clinica,
+                    reseption: service.reseption,
+                })
+
+                await newproduct.save()
+            }
         }
 
         // CreateProducts
@@ -298,18 +314,6 @@ module.exports.add = async (req, res) => {
                 })
             }
 
-            //=========================================================
-            // Product decrement
-            const productconnectors = await ProductConnector.find({
-                clinica: client.clinica,
-                service: service.serviceid,
-            })
-
-            for (const productconnector of productconnectors) {
-                const product = await Product.findById(productconnector.product)
-                product.total = product.total - productconnector.pieces * service.pieces
-                await product.save()
-            }
 
             //=========================================================
             // TURN
@@ -378,6 +382,35 @@ module.exports.add = async (req, res) => {
             totalprice += service.service.price
 
             updateOfflineConnector.services.push(newservice._id)
+
+            // Product decrement
+            const productconnectors = await ProductConnector.find({
+                clinica: client.clinica,
+                service: service.serviceid,
+            })
+
+            for (const productconnector of productconnectors) {
+                const product = await Product.findById(productconnector.product)
+                product.total = product.total - productconnector.pieces * service.pieces
+                await product.save()
+
+                const newproduct = new OfflineProduct({
+                    pieces: productconnector.pieces * service.pieces,
+                    productid: product._id,
+                    client: client._id,
+                    product: {
+                        _id: product._id,
+                        name: product.name,  
+                        price: product.price
+                    },
+                    connector: updateOfflineConnector._id,
+                    service: newservice._id,
+                    clinica: product.clinica,
+                    reseption: service.reseption,
+                })
+
+                await newproduct.save()
+            }
         }
 
         // CreateProducts
@@ -806,7 +839,7 @@ module.exports.getAllReseption = async (req, res) => {
                         select: "probirka"
                     }
                 })
-                .populate('products', '_id product pieces')
+                .populate('products')
                 .sort({ _id: -1 })
         }
 
