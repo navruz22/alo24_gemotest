@@ -22,7 +22,7 @@ const CreateCounterDoctor = () => {
 
     const { request, loading } = useHttp();
     const auth = useContext(AuthContext);
-
+    console.log(auth);
     //====================================================
     //====================================================
 
