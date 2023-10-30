@@ -138,7 +138,7 @@ const Doctors = () => {
         }
     }
 
-    const [searchedClient, setSearchedClient] = useState([])
+    const [searchedClient, setSearchedClient] = useState('')
 
     const searchClientName = (e) => {
         const searching = searchStorage.filter((item) =>
