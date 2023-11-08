@@ -138,6 +138,8 @@ const Doctors = () => {
         }
     }
 
+    const [searchedClient, setSearchedClient] = useState('')
+
     const searchClientName = (e) => {
         const searching = searchStorage.filter((item) =>
             item.client.firstname
@@ -148,8 +150,31 @@ const Doctors = () => {
                 .includes(e.target.value.toLowerCase())
         );
         setCounterdoctors(searching);
+        setSearchedClient(e.target.value)
     }
 
+    const searchService = (e) => {
+        if (searchedClient) {
+            const searching = searchStorage.filter((item) =>
+            ((item.client.firstname
+                .toLowerCase()
+                .includes(searchedClient.toLowerCase()) ||
+                item.client.lastname
+                    .toLowerCase()
+                    .includes(searchedClient.toLowerCase())) && item.service.name
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase()))
+            );
+            setCounterdoctors(searching);
+        } else {
+            const searching = searchStorage.filter((item) =>
+                item.service.name
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase())
+            );
+            setCounterdoctors(searching);
+        }
+    }
     //==============================================================
     //==============================================================
 
@@ -216,7 +241,8 @@ const Doctors = () => {
                             setPageSize={setPageSize}
                             searchClientName={searchClientName}
                             setCurrentPage={setCurrentPage}
-                        /> 
+                            searchService={searchService}
+                        />
                     </div>
                 </div>
             </div>

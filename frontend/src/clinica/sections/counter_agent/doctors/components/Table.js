@@ -3,6 +3,7 @@ import Select from 'react-select'
 import { Pagination } from '../../../reseption/components/Pagination'
 import { DatePickers } from '../../../reseption/offlineclients/clientComponents/DatePickers'
 import { Sort } from '../../../reseption/offlineclients/clientComponents/Sort'
+import ReactHtmlTableToExcel from "react-html-table-to-excel";
 
 const Table = ({
     changeStart,
@@ -16,7 +17,8 @@ const Table = ({
     currentPage,
     setPageSize,
     counterDoctorsList,
-    changeCounterDoctor
+    changeCounterDoctor,
+    searchService
 }) => {
 
     const [selected, setSelected] = useState(null)
@@ -78,6 +80,15 @@ const Table = ({
                             placeholder="Mijoz F.I.O"
                         />
                     </div>
+                    <div>
+                        <input
+                            onChange={searchService}
+                            style={{ maxWidth: '200px', minWidth: '200px' }}
+                            type="search"
+                            className="w-100 form-control form-control-sm selectpicker"
+                            placeholder="Xizmat"
+                        />
+                    </div>
                     <div className="text-center ml-auto ">
                         <Pagination
                             setCurrentDatas={setCurrentConnectors}
@@ -94,9 +105,20 @@ const Table = ({
                         <DatePickers changeDate={changeStart} />
                         <DatePickers changeDate={changeEnd} />
                     </div>
+                    <div className="texte-center">
+                            <div className="btn btn-primary">
+                                <ReactHtmlTableToExcel
+                                    id="reacthtmltoexcel"
+                                    table="counter-agent-table"
+                                    sheet="Sheet"
+                                    buttonText="Excel"
+                                    filename="KontrAgent"
+                                />
+                            </div>
+                        </div>
                 </div>
                 <div className="table-responsive">
-                    <table className="table m-0">
+                    <table className="table m-0" id='counter-agent-table'>
                         <thead>
                             <tr>
                                 <th className="border py-1 bg-alotrade text-[16px]">№</th>
