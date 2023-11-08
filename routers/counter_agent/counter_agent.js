@@ -70,7 +70,7 @@ module.exports.get = async (req, res) => {
                     $lt: endDay,
                 },
             })
-                .select('service createdAt counterdoctor pieces')
+                .select('service createdAt counterdoctor pieces refuse')
                 .populate({
                     path: "counterdoctor",
                     select: "firstname lastname clinica_name counter_agent",
@@ -78,7 +78,7 @@ module.exports.get = async (req, res) => {
                 })
                 .populate('client', 'firstname lastname createdAt')
                 .lean()
-                .then(services => services.filter(service => service.counterdoctor))
+                .then(services => services.filter(service => !service.refuse && service.counterdoctor))
 
         } else {
             offlineservices = await OfflineService.find({
@@ -89,10 +89,11 @@ module.exports.get = async (req, res) => {
                     $lt: endDay,
                 },
             })
-                .select('service createdAt counterdoctor pieces')
+                .select('service createdAt counterdoctor pieces refuse')
                 .populate('counterdoctor', 'firstname lastname clinica_name')
                 .populate('client', 'firstname lastname createdAt')
-                .lean();
+                .lean()
+                .then(services => services.filter(service => !service.refuse))
         }
 
         for (const service of offlineservices) {
