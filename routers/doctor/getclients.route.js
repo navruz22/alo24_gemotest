@@ -22,7 +22,7 @@ require('../../models/Cashier/OfflinePayment')
 //Clients getall
 module.exports.getAll = async (req, res) => {
   try {
-    const { clinica, beginDay, endDay, department, clientborn } = req.body;
+    const { clinica, beginDay, endDay, department, clientborn, clientId, name } = req.body;
 
     const clinic = await Clinica.findById(clinica);
 
@@ -82,10 +82,108 @@ module.exports.getAll = async (req, res) => {
         .populate('payments')
         .lean()
         .then(connectors => connectors.filter(connector =>
-          connector.services.some(service => String(service.department._id) === String(department)) &&
-          new Date(new Date(connector.client.born).setUTCHours(0, 0, 0, 0)).toISOString() === new Date(new Date(clientborn).setUTCHours(0, 0, 0, 0)).toISOString()
+          connector.services.some(service => service.department && String(service.department._id) === String(department)) &&
+          connector.client && new Date(new Date(connector.client.born).setUTCHours(0, 0, 0, 0)).toISOString() === new Date(new Date(clientborn).setUTCHours(0, 0, 0, 0)).toISOString()
         ))
-    } else {
+    } else if (clientId) {
+      connectors = await OfflineConnector.find({
+        clinica,
+      })
+        .select('-__v -updatedAt -isArchive')
+        .populate('clinica', 'name phone1 image')
+        .populate("client", "lastname firstname born id phone address")
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: "service",
+            select: "price"
+          }
+        })
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: "serviceid",
+            select: "servicetype",
+            populate: {
+              path: "servicetype",
+              select: "name"
+            }
+          }
+        })
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: "templates",
+            select: "name template",
+          }
+        })
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: 'department',
+            select: "probirka"
+          }
+        })
+        .populate('payments')
+        .lean()
+        .then(connectors => connectors.filter(connector =>
+          connector.services.some(service => service.department && String(service.department._id) === String(department)) &&
+          connector.client && String(connector.client.id).includes(clientId)
+        ))
+    } else if (name) {
+      connectors = await OfflineConnector.find({
+        clinica,
+      })
+        .select('-__v -updatedAt -isArchive')
+        .populate('clinica', 'name phone1 image')
+        .populate("client", "lastname firstname born id phone address")
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: "service",
+            select: "price"
+          }
+        })
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: "serviceid",
+            select: "servicetype",
+            populate: {
+              path: "servicetype",
+              select: "name"
+            }
+          }
+        })
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: "templates",
+            select: "name template",
+          }
+        })
+        .populate({
+          path: "services",
+          select: "service serviceid accept refuse column tables turn connector client files department",
+          populate: {
+            path: 'department',
+            select: "probirka"
+          }
+        })
+        .populate('payments')
+        .lean()
+        .then(connectors => connectors.filter(connector =>
+          connector.services.some(service => service.department && String(service.department._id) === String(department)) &&
+          connector.client && (connector.client.firstname + ' ' + connector.client.lastname).toLowerCase().includes(name.toLowerCase())
+        ))
+  } else {
       connectors = await OfflineConnector.find({
         createdAt: {
           $gte: beginDay,

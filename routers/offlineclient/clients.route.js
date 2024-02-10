@@ -732,7 +732,7 @@ module.exports.getAll = async (req, res) => {
 //Clients getall
 module.exports.getAllReseption = async (req, res) => {
     try {
-        const { clinica, beginDay, endDay, clientborn, clientId } = req.body
+        const { clinica, beginDay, endDay, clientborn, clientId, name, phone, probirka } = req.body
 
         const clinic = await Clinica.findById(clinica)
 
@@ -774,7 +774,7 @@ module.exports.getAllReseption = async (req, res) => {
                 .lean()
                 .then(datas => {
                     return datas.filter(data => {
-                        return new Date(new Date(data.client.born).setUTCHours(0, 0, 0, 0)).toISOString() === new Date(new Date(clientborn).setUTCHours(0, 0, 0, 0)).toISOString()
+                        return data.client && (new Date(new Date(data.client.born).setUTCHours(0, 0, 0, 0)).toISOString() === new Date(new Date(clientborn).setUTCHours(0, 0, 0, 0)).toISOString())
                     });
                 })
         } else if (clientId) {
@@ -807,8 +807,138 @@ module.exports.getAllReseption = async (req, res) => {
                 .sort({ _id: -1 })
                 .lean()
                 .then(connectors => {
-                    return connectors.filter(connector => String(connector.client.id).includes(clientId));
+                    return connectors.filter(connector => String(connector.client && connector.client.id).includes(clientId));
                 })
+        } else if (name) {
+            connectors = await OfflineConnector.find({
+                clinica
+            })
+                .select('probirka client accept services products createdAt totalprice')
+                .populate('client', 'fullname firstname lastname fathername phone national id gender born address')
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse column templates tables turn connector client files department",
+                    populate: {
+                        path: "serviceid",
+                        select: "servicetype",
+                        populate: {
+                            path: "servicetype",
+                            select: "name"
+                        }
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse templates column tables turn connector client files department",
+                    populate: {
+                        path: 'department',
+                        select: "probirka name"
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse templates column tables turn connector client files department",
+                    populate: {
+                        path: 'reseption',
+                        select: "type specialty",
+                        populate: {
+                            path: 'specialty',
+                            select: "name",
+                        }
+                    }
+                })
+                .populate('products', '_id product pieces')
+                .sort({ _id: -1 })
+                .lean()
+                .then(connectors => {
+                    return connectors.filter(connector => connector.client && (connector.client.firstname + ' ' + connector.client.lastname).toLowerCase().includes(name.toLowerCase()));
+                })
+        } else if (phone) {
+            connectors = await OfflineConnector.find({
+                clinica
+            })
+                .select('probirka client accept services products createdAt totalprice')
+                .populate('client', 'fullname firstname lastname fathername phone national id gender born address')
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse column templates tables turn connector client files department",
+                    populate: {
+                        path: "serviceid",
+                        select: "servicetype",
+                        populate: {
+                            path: "servicetype",
+                            select: "name"
+                        }
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse templates column tables turn connector client files department",
+                    populate: {
+                        path: 'department',
+                        select: "probirka name"
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse templates column tables turn connector client files department",
+                    populate: {
+                        path: 'reseption',
+                        select: "type specialty",
+                        populate: {
+                            path: 'specialty',
+                            select: "name",
+                        }
+                    }
+                })
+                .populate('products', '_id product pieces')
+                .sort({ _id: -1 })
+                .lean()
+                .then(connectors => {
+                    return connectors.filter(connector => connector.client && connector.client.phone.toLowerCase().includes(phone.toLowerCase()));
+                })
+        } else if (probirka) {
+            connectors = await OfflineConnector.find({
+                clinica,
+                probirka,
+            })
+                .select('probirka client accept services products createdAt totalprice')
+                .populate('client', 'fullname firstname lastname fathername phone national id gender born address')
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse column templates tables turn connector client files department",
+                    populate: {
+                        path: "serviceid",
+                        select: "servicetype",
+                        populate: {
+                            path: "servicetype",
+                            select: "name"
+                        }
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse templates column tables turn connector client files department",
+                    populate: {
+                        path: 'department',
+                        select: "probirka name"
+                    }
+                })
+                .populate({
+                    path: "services",
+                    select: "service createdAt reseption pieces serviceid accept refuse templates column tables turn connector client files department",
+                    populate: {
+                        path: 'reseption',
+                        select: "type specialty",
+                        populate: {
+                            path: 'specialty',
+                            select: "name",
+                        }
+                    }
+                })
+                .populate('products', '_id product pieces')
+                .sort({ _id: -1 })
+                .lean()
         } else {
             connectors = await OfflineConnector.find({
                 clinica,

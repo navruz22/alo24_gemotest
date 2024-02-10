@@ -28,7 +28,10 @@ export const TableClients = ({
   loading,
   handlePrint,
   getDoctorClientsByClientBorn,
-  searchProbirka
+  searchProbirka,
+  getDoctorClientsByName,
+  getDoctorClientsById,
+  getDoctorClientsByProbirka
 }) => {
 
   const history = useHistory()
@@ -70,6 +73,7 @@ export const TableClients = ({
               type="search"
               className="w-100 form-control form-control-sm selectpicker text-[16px]"
               placeholder="F.I.O"
+              onKeyDown={(e) => e.key === 'Enter' && getDoctorClientsByName(e.target.value)}
             />
           </div>
           <div>
@@ -79,6 +83,7 @@ export const TableClients = ({
               type="search"
               className="form-control form-control-sm selectpicker text-[16px]"
               placeholder="ID"
+              onKeyDown={(e) => e.key === 'Enter' && getDoctorClientsById(e.target.value)}
             />
           </div>
           <div>
@@ -88,6 +93,7 @@ export const TableClients = ({
               type="probirka"
               className="form-control form-control-sm selectpicker text-[16px]"
               placeholder="Probirka"
+              onKeyDown={(e) => e.key === 'Enter' && getDoctorClientsByProbirka(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-4">

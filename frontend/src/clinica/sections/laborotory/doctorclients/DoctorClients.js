@@ -156,6 +156,105 @@ export const DoctorClients = () => {
 
   //===================================================================
   //===================================================================
+
+  const [name, setName] = useState("")
+
+  const getDoctorClientsByName = async () => {
+    try {
+      const data = await request(
+        `/api/labaratory/clients/get`,
+        "POST",
+        {
+          clinica: auth && auth.clinica._id,
+          name
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      const currentData = data[0].services.length > 0 ? data : []
+      setDoctorClients(currentData);
+      setSearchStorage(currentData);
+      setCurrentDoctorClients(
+        currentData.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
+    }
+  }
+
+  //===================================================================
+  //===================================================================
+
+  const [clientId, setClientId] = useState("")
+
+  const getDoctorClientsById = async () => {
+    try {
+      const data = await request(
+        `/api/labaratory/clients/get`,
+        "POST",
+        {
+          clinica: auth && auth.clinica._id,
+          clientId
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      const currentData = data[0].services.length > 0 ? data : []
+      setDoctorClients(currentData);
+      setSearchStorage(currentData);
+      setCurrentDoctorClients(
+        currentData.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
+    }
+  }
+
+  //===================================================================
+  //===================================================================
+
+  const [probirka, setProbirka] = useState("")
+
+  const getDoctorClientsByProbirka = async () => {
+    try {
+      const data = await request(
+        `/api/labaratory/clients/get`,
+        "POST",
+        {
+          clinica: auth && auth.clinica._id,
+          probirka
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      const currentData = data[0].services.length > 0 ? data : []
+      setDoctorClients(currentData);
+      setSearchStorage(currentData);
+      setCurrentDoctorClients(
+        currentData.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
+    }
+  }
+
+  //===================================================================
+  //===================================================================
   // Searching
 
   const searchFullname = useCallback(
@@ -168,6 +267,7 @@ export const DoctorClients = () => {
           .toLowerCase()
           .includes(e.target.value.toLowerCase())
       );
+      setName(e.target.value)
       setDoctorClients(searching);
       setCurrentDoctorClients(searching.slice(0, countPage));
     },
@@ -179,6 +279,7 @@ export const DoctorClients = () => {
       const searching = searchStorage.filter((item) =>
         item.client.id.toString().includes(e.target.value)
       );
+      setClientId(e.target.value)
       setDoctorClients(searching);
       setCurrentDoctorClients(searching.slice(0, countPage));
     },
@@ -189,6 +290,7 @@ export const DoctorClients = () => {
       const searching = searchStorage.filter((item) =>
         item.connector.probirka.toString().includes(e.target.value)
       );
+      setProbirka(e.target.value)
       setDoctorClients(searching);
       setCurrentDoctorClients(searching.slice(0, countPage));
     }
@@ -334,9 +436,12 @@ export const DoctorClients = () => {
               setCurrentDoctorClients={setCurrentDoctorClients}
               currentPage={currentPage}
               setPageSize={setPageSize}
+              getDoctorClientsByName={getDoctorClientsByName}
+              getDoctorClientsById={getDoctorClientsById}
               loading={loading}
               handlePrint={handlePrint}
               getDoctorClientsByClientBorn={getDoctorClientsByClientBorn}
+              getDoctorClientsByProbirka={getDoctorClientsByProbirka}
               searchProbirka={searchProbirka}
             />
           </div>

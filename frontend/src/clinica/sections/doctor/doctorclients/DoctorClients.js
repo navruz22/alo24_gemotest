@@ -167,69 +167,69 @@ export const DoctorClients = () => {
   //Get by born date
 
   const getDoctorClientsByBorn = async (e) => {
-      try {
-        const data = await request(
-          `/api/doctor/clients/getclients`,
-          "POST",
-          {
-            clientborn: new Date(new Date(e)),
-            department: auth?.user?.specialty,
-            clinica: auth && auth.clinica._id,
-          },
-          {
-            Authorization: `Bearer ${auth.token}`,
-          }
-        );
-        setDoctorClients(data);
-        setSearchStorage(data);
-        setCurrentDoctorClients(
-          data.slice(indexFirstConnector, indexLastConnector)
-        );
-      } catch (error) {
-        notify({
-          title: error,
-          description: "",
-          status: "error",
-        });
-      }
+    try {
+      const data = await request(
+        `/api/doctor/clients/getclients`,
+        "POST",
+        {
+          clientborn: new Date(new Date(e)),
+          department: auth?.user?.specialty,
+          clinica: auth && auth.clinica._id,
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      setDoctorClients(data);
+      setSearchStorage(data);
+      setCurrentDoctorClients(
+        data.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
     }
+  }
 
 
   const getStatsionarClientsByBorn = async (e) => {
-      try {
-        const data = await request(
-          `/api/doctor/clients/statsionarclients/get`,
-          "POST",
-          {
-            clientborn: new Date(new Date(e)),
-            department: auth?.user?.specialty,
-            clinica: auth && auth.clinica._id,
-          },
-          {
-            Authorization: `Bearer ${auth.token}`,
-          }
-        );
-        setDoctorClients(data);
-        setSearchStorage(data);
-        setCurrentDoctorClients(
-          data.slice(indexFirstConnector, indexLastConnector)
-        );
-      } catch (error) {
-        notify({
-          title: error,
-          description: "",
-          status: "error",
-        });
-      }
+    try {
+      const data = await request(
+        `/api/doctor/clients/statsionarclients/get`,
+        "POST",
+        {
+          clientborn: new Date(new Date(e)),
+          department: auth?.user?.specialty,
+          clinica: auth && auth.clinica._id,
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      setDoctorClients(data);
+      setSearchStorage(data);
+      setCurrentDoctorClients(
+        data.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
     }
+  }
 
-    const getClientsByBorn = (e) => {
-      if (clientsType === 'offline') {
-        getDoctorClientsByBorn(e)
-      } else {
-        getStatsionarClientsByBorn(e)
-      }
+  const getClientsByBorn = (e) => {
+    if (clientsType === 'offline') {
+      getDoctorClientsByBorn(e)
+    } else {
+      getStatsionarClientsByBorn(e)
     }
+  }
 
   //===================================================================
   //===================================================================
@@ -266,80 +266,146 @@ export const DoctorClients = () => {
   }
 
   const addServices = async () => {
-      try {
-        const data = await request(
-          `/api/doctor/clients/service/add`,
-          "POST",
-          {
-            client: { ...client, clinica: auth.clinica._id },
-            connector: { ...connector, clinica: auth.clinica._id },
-            services: [...newservices],
-            products: [...newproducts],
-            clinica: auth && auth.clinica._id
-          },
-          {
-            Authorization: `Bearer ${auth.token}`,
-          }
-        );
-        notify({
-          title: data.message,
-          description: "",
-          status: "success",
-        });
-        setSelectedServices(null);
-        setConnector({})
-        setClient({})
-        setModal(false);
-        getDoctorClients(beginDay, endDay)
-        setNewProducts([])
-        setNewServices([])
-        setVisible(false);
-      } catch (error) {
-        notify({
-          title: error,
-          description: "",
-          status: "error",
-        });
-      }
+    try {
+      const data = await request(
+        `/api/doctor/clients/service/add`,
+        "POST",
+        {
+          client: { ...client, clinica: auth.clinica._id },
+          connector: { ...connector, clinica: auth.clinica._id },
+          services: [...newservices],
+          products: [...newproducts],
+          clinica: auth && auth.clinica._id
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      notify({
+        title: data.message,
+        description: "",
+        status: "success",
+      });
+      setSelectedServices(null);
+      setConnector({})
+      setClient({})
+      setModal(false);
+      getDoctorClients(beginDay, endDay)
+      setNewProducts([])
+      setNewServices([])
+      setVisible(false);
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
     }
+  }
 
   const addServiceStatsionar = async () => {
-      try {
-        const data = await request(
-          `/api/doctor/clients/statsionar/service/add`,
-          "POST",
-          {
-            client: { ...client, clinica: auth.clinica._id },
-            connector: { ...connector, clinica: auth.clinica._id },
-            services: [...newservices],
-            products: [...newproducts],
-            clinica: auth && auth.clinica._id
-          },
-          {
-            Authorization: `Bearer ${auth.token}`,
-          }
-        );
-        notify({
-          title: data.message,
-          description: "",
-          status: "success",
-        });
-        setSelectedServices(null);
-        setConnector({})
-        setClient({})
-        setModal(false);
-        getStatsionarClients(beginDay, endDay)
-        setNewProducts([])
-        setNewServices([])
-        setVisible(false);
-      } catch (error) {
-        notify({
-          title: error,
-          description: "",
-          status: "error",
-        });
-      }
+    try {
+      const data = await request(
+        `/api/doctor/clients/statsionar/service/add`,
+        "POST",
+        {
+          client: { ...client, clinica: auth.clinica._id },
+          connector: { ...connector, clinica: auth.clinica._id },
+          services: [...newservices],
+          products: [...newproducts],
+          clinica: auth && auth.clinica._id
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      notify({
+        title: data.message,
+        description: "",
+        status: "success",
+      });
+      setSelectedServices(null);
+      setConnector({})
+      setClient({})
+      setModal(false);
+      getStatsionarClients(beginDay, endDay)
+      setNewProducts([])
+      setNewServices([])
+      setVisible(false);
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
     }
+  }
+
+  //===================================================================
+  //===================================================================
+
+  const [clientId, setClientId] = useState('')
+
+  const getClientsById = async () => {
+    try {
+      const data = await request(
+        `/api/doctor/clients/getclients`,
+        "POST",
+        {
+          clientId,
+          department: auth?.user?.specialty,
+          clinica: auth && auth.clinica._id,
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      setDoctorClients(data);
+      setSearchStorage(data);
+      setCurrentDoctorClients(
+        data.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
+    }
+  }
+
+  //===================================================================
+  //===================================================================
+
+  const [name, setName] = useState('')
+
+  const getClientsByName = async () => {
+    try {
+      const data = await request(
+        `/api/doctor/clients/getclients`,
+        "POST",
+        {
+          name,
+          department: auth?.user?.specialty,
+          clinica: auth && auth.clinica._id,
+        },
+        {
+          Authorization: `Bearer ${auth.token}`,
+        }
+      );
+      setDoctorClients(data);
+      setSearchStorage(data);
+      setCurrentDoctorClients(
+        data.slice(indexFirstConnector, indexLastConnector)
+      );
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
+    }
+  }
 
   //===================================================================
   //===================================================================
@@ -352,6 +418,7 @@ export const DoctorClients = () => {
           .toLowerCase()
           .includes(e.target.value.toLowerCase())
       );
+      setName(e.target.value)
       setDoctorClients(searching);
       setCurrentDoctorClients(searching.slice(0, countPage));
     },
@@ -363,6 +430,7 @@ export const DoctorClients = () => {
       const searching = searchStorage.filter((item) =>
         item.client.id.toString().includes(e.target.value)
       );
+      setClientId(e.target.value)
       setDoctorClients(searching);
       setCurrentDoctorClients(searching.slice(0, countPage));
     },
@@ -855,6 +923,8 @@ export const DoctorClients = () => {
               clientsType={clientsType}
               changeClientsType={changeClientsType}
               getClientsByBorn={getClientsByBorn}
+              getClientsById={getClientsById}
+              getClientsByName={getClientsByName}
             />
           </div>
         </div>

@@ -40,7 +40,10 @@ export const TableClients = ({
   setIsAddConnector,
   getClientsById,
   setPrintBody,
-  handlePrint
+  handlePrint,
+  getByClientName,
+  getByClientPhone,
+  getClientsByProbirka
 }) => {
 
   const history = useHistory()
@@ -70,6 +73,7 @@ export const TableClients = ({
                 type="search"
                 className="w-100 form-control form-control-sm selectpicker"
                 placeholder="F.I.O"
+                onKeyDown={(e) => e.key === 'Enter' && getByClientName()}
               />
             </div>
             <div>
@@ -79,6 +83,7 @@ export const TableClients = ({
                 type="search"
                 className="w-100 form-control form-control-sm selectpicker"
                 placeholder="Tel"
+                onKeyDown={(e) => e.key === 'Enter' && getByClientPhone()}
               />
             </div>
             <div>
@@ -98,6 +103,7 @@ export const TableClients = ({
                 type="search"
                 className="form-control form-control-sm selectpicker"
                 placeholder="Probirka"
+                onKeyDown={(e) => e.key === 'Enter' && getClientsByProbirka()}
               />
             </div>
             <div className="flex items-center gap-4">

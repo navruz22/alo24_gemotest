@@ -40,7 +40,7 @@ module.exports.approve = async (req, res) => {
 
 module.exports.getLabClients = async (req, res) => {
     try {
-        const { clinica, beginDay, endDay, clientborn } = req.body;
+        const { clinica, beginDay, endDay, clientborn, name, clientId, probirka } = req.body;
 
         const clinic = await Clinica.findById(clinica);
 
@@ -146,6 +146,268 @@ module.exports.getLabClients = async (req, res) => {
                     return services.filter(service => {
                         return service.connector.accept && new Date(new Date(service.client.born).setUTCHours(0, 0, 0, 0)).toISOString() === new Date(new Date(clientborn).setUTCHours(0, 0, 0, 0)).toISOString()
                             && service.department.probirka && !service.refuse && service.serviceid?._id
+                    })
+                })
+        } else if(name) {
+            offline = await OfflineService.find({
+                clinica,
+            })
+                .select("service serviceid accept refuse column tables turn connector client files department")
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "clinica",
+                        select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate("client", "lastname firstname born id phone address")
+                .populate("service", "price")
+                .populate({
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                })
+                .populate('department', 'probirka')
+                .populate("templates", "name template")
+                .lean()
+                .then(services => {
+                    return services.filter(service => {
+                        return service.connector.accept && service.client && (service.client.firstname + ' ' + service.client.lastname).toLowerCase().includes(name.toLowerCase())
+                            && service.department && service.department.probirka && !service.refuse && service.serviceid?._id
+                    })
+                })
+            statsionar = await StatsionarService.find({
+                clinica,
+            })
+                .select("service serviceid accept refuse column tables turn connector client files department")
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "clinica",
+                        select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "dailys",
+                        select: "probirka"
+                    }
+                })
+                .populate("client", "lastname firstname born id phone address")
+                .populate("service", "price")
+                .populate({
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                })
+                .populate('department', 'probirka')
+                .populate("templates", "name template")
+                .lean()
+                .then(services => {
+                    return services.filter(service => {
+                        return service.connector.accept && (service.client.firstname + ' ' + service.client.lastname).toLowerCase().includes(name.toLowerCase())
+                            && service.department.probirka && !service.refuse && service.serviceid?._id
+                    })
+                })
+        } else if(clientId) {
+            offline = await OfflineService.find({
+                clinica,
+            })
+                .select("service serviceid accept refuse column tables turn connector client files department")
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "clinica",
+                        select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate("client", "lastname firstname born id phone address")
+                .populate("service", "price")
+                .populate({
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                })
+                .populate('department', 'probirka')
+                .populate("templates", "name template")
+                .lean()
+                .then(services => {
+                    return services.filter(service => {
+                        return service.connector.accept && service.client && String(service.client.id).includes(clientId)
+                            && service.department.probirka && !service.refuse && service.serviceid?._id
+                    })
+                })
+            statsionar = await StatsionarService.find({
+                clinica,
+            })
+                .select("service serviceid accept refuse column tables turn connector client files department")
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "clinica",
+                        select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "dailys",
+                        select: "probirka"
+                    }
+                })
+                .populate("client", "lastname firstname born id phone address")
+                .populate("service", "price")
+                .populate({
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                })
+                .populate('department', 'probirka')
+                .populate("templates", "name template")
+                .lean()
+                .then(services => {
+                    return services.filter(service => {
+                        return service.connector.accept && String(service.client.id).includes(clientId)
+                            && service.department.probirka && !service.refuse && service.serviceid?._id
+                    })
+                })
+        } else if(probirka) {
+            offline = await OfflineService.find({
+                clinica,
+            })
+                .select("service serviceid accept refuse column tables turn connector client files department")
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "clinica",
+                        select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate("client", "lastname firstname born id phone address")
+                .populate("service", "price")
+                .populate({
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                })
+                .populate('department', 'probirka')
+                .populate("templates", "name template")
+                .lean()
+                .then(services => {
+                    return services.filter(service => {
+                        return service.connector.accept && service.department &&
+                        service.department.probirka && service.connector && service.connector.probirka === Number(probirka) && !service.refuse && service.serviceid?._id
+                    })
+                })
+            statsionar = await StatsionarService.find({
+                clinica,
+            })
+                .select("service serviceid accept refuse column tables turn connector client files department")
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "clinica",
+                        select: "name phone1 image"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "payments",
+                        select: "-isArchive -updatedAt -__v"
+                    }
+                })
+                .populate({
+                    path: "connector",
+                    select: "probirka createdAt accept clinica payments dailys",
+                    populate: {
+                        path: "dailys",
+                        select: "probirka"
+                    }
+                })
+                .populate("client", "lastname firstname born id phone address")
+                .populate("service", "price")
+                .populate({
+                    path: "serviceid",
+                    select: "servicetype",
+                    populate: {
+                        path: "servicetype",
+                        select: "name"
+                    }
+                })
+                .populate('department', 'probirka')
+                .populate("templates", "name template")
+                .lean()
+                .then(services => {
+                    return services.filter(service => {
+                        return service.connector.accept && 
+                        service.department && service.department.probirka && service.connector.dailys &&
+                        service.connector.dailys.includes(probirka) && !service.refuse && service.serviceid?._id
                     })
                 })
         } else {

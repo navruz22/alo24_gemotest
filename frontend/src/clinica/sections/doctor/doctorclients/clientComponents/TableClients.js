@@ -38,7 +38,9 @@ export const TableClients = ({
   setVisible,
   clientsType,
   changeClientsType,
-  getClientsByBorn
+  getClientsByBorn,
+  getClientsByName,
+  getClientsById
 }) => {
   const history = useHistory();
   const [clientBorn, setClientBorn] = useState('')
@@ -80,6 +82,7 @@ export const TableClients = ({
                 type="search"
                 className="w-100 form-control form-control-sm selectpicker"
                 placeholder="F.I.O"
+                onKeyDown={(e) => e.key === 'Enter' && getClientsByName(e.target.value)}
               />
             </div>
             <div>
@@ -89,6 +92,7 @@ export const TableClients = ({
                 type="search"
                 className="form-control form-control-sm selectpicker"
                 placeholder="ID"
+                onKeyDown={(e) => e.key === 'Enter' && getClientsById(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-4">
