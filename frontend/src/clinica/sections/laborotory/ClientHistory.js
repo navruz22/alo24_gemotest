@@ -411,7 +411,7 @@ const ClientHistory = () => {
     const [connector, setConnector] = useState({})
     const [client, setClient] = useState({})
     const [services, setServices] = useState([])
-    
+
     const getClientHistory = useCallback(
         async (id) => {
             try {
@@ -477,7 +477,7 @@ const ClientHistory = () => {
             >
                 <Print
                     baseUrl={baseUrl}
-                    clinica={auth?.clinica}
+                    clinica={connector?.clinica}
                     connector={connector}
                     client={client}
                     sections={services}

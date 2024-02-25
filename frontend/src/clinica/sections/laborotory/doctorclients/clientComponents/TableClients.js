@@ -6,6 +6,7 @@ import {
   faPenAlt,
   faPrint,
   faSearch,
+  faMessage
 } from "@fortawesome/free-solid-svg-icons";
 import { Pagination } from "../../components/Pagination";
 import { DatePickers } from "./DatePickers";
@@ -31,7 +32,8 @@ export const TableClients = ({
   searchProbirka,
   getDoctorClientsByName,
   getDoctorClientsById,
-  getDoctorClientsByProbirka
+  getDoctorClientsByProbirka,
+  handleSendMessage
 }) => {
 
   const history = useHistory()
@@ -41,12 +43,12 @@ export const TableClients = ({
   const [debt, setDebt] = useState(0)
 
   const isDebt = (payments) => {
-      const debt = payments ? payments.reduce((prev, item) => prev + item?.debt, 0) : 0
-      if (debt > 0) {
-        return 'bg-red-400'
-      } else {
-        return ""
-      }
+    const debt = payments ? payments.reduce((prev, item) => prev + item?.debt, 0) : 0
+    if (debt > 0) {
+      return 'bg-red-400'
+    } else {
+      return ""
+    }
   }
 
   return (
@@ -287,6 +289,9 @@ export const TableClients = ({
                 Kelgan vaqti
               </th>
               <th className="border bg-alotrade py-1 text-[14px]">
+                Sms
+              </th>
+              <th className="border bg-alotrade py-1 text-[14px]">
                 Qabul
               </th>
             </tr>
@@ -331,6 +336,19 @@ export const TableClients = ({
                   <td className="border py-1 text-right text-[16px]">
                     {new Date(connector.connector.createdAt).toLocaleDateString()} {new Date(connector.connector.createdAt).toLocaleTimeString()}
                   </td>
+                  <td className="border py-1 text-right text-[16px]">
+                    <div className="custom-control custom-checkbox text-center">
+                      <input
+                        checked={connector.connector.isSended}
+                        type="checkbox"
+                        className="custom-control-input border border-dager"
+                        id={`${connector.connector._id}`}
+                        onChange={(e) => handleSendMessage(connector.connector._id, connector.client.id)}
+                      />
+                      <label className="custom-control-label"
+                        htmlFor={`${connector.connector._id}`}></label>
+                    </div>
+                  </td>
                   <td className="border py-1 text-center">
                     {loading ? (
                       <button className="btn btn-success" disabled>
@@ -348,7 +366,7 @@ export const TableClients = ({
                       </button>
                     )}
                     {loading ? (
-                      <button className="ml-2 btn btn-success" disabled>
+                      <button className="ml-2 btn btn-primary" disabled>
                         <span className="spinner-border spinner-border-sm"></span>
                         Loading...
                       </button>
@@ -357,11 +375,26 @@ export const TableClients = ({
                         onClick={() =>
                           handlePrint(connector)
                         }
-                        className="ml-2 btn btn-success py-0"
+                        className="ml-2 btn btn-primary py-0"
                       >
                         <FontAwesomeIcon icon={faPrint} />
                       </button>
                     )}
+                    {/* {loading ? (
+                      <button className="ml-2 btn btn-success" disabled>
+                        <span className="spinner-border spinner-border-sm"></span>
+                        Loading...
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleSendMessage(connector.connector._id)
+                        }
+                        className="ml-2 btn btn-success py-0"
+                      >
+                        <FontAwesomeIcon icon={faMessage} />
+                      </button>
+                    )} */}
                   </td>
                 </tr>
               );

@@ -68,7 +68,7 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -76,7 +76,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -107,7 +107,7 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -115,7 +115,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -123,7 +123,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "dailys",
                         select: "probirka"
@@ -148,14 +148,14 @@ module.exports.getLabClients = async (req, res) => {
                             && service.department.probirka && !service.refuse && service.serviceid?._id
                     })
                 })
-        } else if(name) {
+        } else if (name) {
             offline = await OfflineService.find({
                 clinica,
             })
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -163,7 +163,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -194,7 +194,7 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -202,7 +202,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -210,7 +210,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "dailys",
                         select: "probirka"
@@ -235,14 +235,14 @@ module.exports.getLabClients = async (req, res) => {
                             && service.department.probirka && !service.refuse && service.serviceid?._id
                     })
                 })
-        } else if(clientId) {
+        } else if (clientId) {
             offline = await OfflineService.find({
                 clinica,
             })
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -250,7 +250,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -281,7 +281,7 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -289,7 +289,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -297,7 +297,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "dailys",
                         select: "probirka"
@@ -322,14 +322,14 @@ module.exports.getLabClients = async (req, res) => {
                             && service.department.probirka && !service.refuse && service.serviceid?._id
                     })
                 })
-        } else if(probirka) {
+        } else if (probirka) {
             offline = await OfflineService.find({
                 clinica,
             })
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -337,7 +337,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -359,7 +359,7 @@ module.exports.getLabClients = async (req, res) => {
                 .then(services => {
                     return services.filter(service => {
                         return service.connector.accept && service.department &&
-                        service.department.probirka && service.connector && service.connector.probirka === Number(probirka) && !service.refuse && service.serviceid?._id
+                            service.department.probirka && service.connector && service.connector.probirka === Number(probirka) && !service.refuse && service.serviceid?._id
                     })
                 })
             statsionar = await StatsionarService.find({
@@ -368,7 +368,7 @@ module.exports.getLabClients = async (req, res) => {
                 .select("service serviceid accept refuse column tables turn connector client files department")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -376,7 +376,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -384,7 +384,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "dailys",
                         select: "probirka"
@@ -405,9 +405,9 @@ module.exports.getLabClients = async (req, res) => {
                 .lean()
                 .then(services => {
                     return services.filter(service => {
-                        return service.connector.accept && 
-                        service.department && service.department.probirka && service.connector.dailys &&
-                        service.connector.dailys.includes(probirka) && !service.refuse && service.serviceid?._id
+                        return service.connector.accept &&
+                            service.department && service.department.probirka && service.connector.dailys &&
+                            service.connector.dailys.includes(probirka) && !service.refuse && service.serviceid?._id
                     })
                 })
         } else {
@@ -423,7 +423,7 @@ module.exports.getLabClients = async (req, res) => {
                 .populate("service", "price")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -431,7 +431,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments",
+                    select: "probirka createdAt accept clinica payments isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -463,7 +463,7 @@ module.exports.getLabClients = async (req, res) => {
                 .populate("service", "price")
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "clinica",
                         select: "name phone1 image"
@@ -471,7 +471,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "payments",
                         select: "-isArchive -updatedAt -__v"
@@ -479,7 +479,7 @@ module.exports.getLabClients = async (req, res) => {
                 })
                 .populate({
                     path: "connector",
-                    select: "probirka createdAt accept clinica payments dailys",
+                    select: "probirka createdAt accept clinica payments dailys isSended",
                     populate: {
                         path: "dailys",
                         select: "probirka"

@@ -14,7 +14,7 @@ export const CheckModal = ({ modal, connector, setModal, baseUrl, clinica }) => 
   useEffect(() => {
     if (connector.client) {
       QRCode.toDataURL(
-        `${baseUrl}/clienthistorys/${connector._id}`,
+        `${baseUrl}/clienthistory/${connector._id}`,
       ).then((data) => {
         setQr(data)
       })

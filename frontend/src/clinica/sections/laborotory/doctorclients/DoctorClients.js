@@ -6,6 +6,7 @@ import { useHttp } from "../../../hooks/http.hook";
 import Print from "../components/Print";
 import { TableClients } from "./clientComponents/TableClients";
 import Select from 'react-select'
+import QRCode from "qrcode"
 import makeAnimated from 'react-select/animated'
 
 const animatedComponents = makeAnimated()
@@ -263,7 +264,7 @@ export const DoctorClients = () => {
         item.client.lastname
           .toLowerCase()
           .includes(e.target.value.toLowerCase()) ||
-          item.client.firstname
+        item.client.firstname
           .toLowerCase()
           .includes(e.target.value.toLowerCase())
       );
@@ -287,13 +288,13 @@ export const DoctorClients = () => {
   );
 
   const searchProbirka = (e) => {
-      const searching = searchStorage.filter((item) =>
-        item.connector.probirka.toString().includes(e.target.value)
-      );
-      setProbirka(e.target.value)
-      setDoctorClients(searching);
-      setCurrentDoctorClients(searching.slice(0, countPage));
-    }
+    const searching = searchStorage.filter((item) =>
+      item.connector.probirka.toString().includes(e.target.value)
+    );
+    setProbirka(e.target.value)
+    setDoctorClients(searching);
+    setCurrentDoctorClients(searching.slice(0, countPage));
+  }
 
   //===================================================================
   //===================================================================
@@ -343,6 +344,20 @@ export const DoctorClients = () => {
 
   //====================================================================
   //====================================================================
+
+  const [qr, setQr] = useState()
+
+  // useEffect(() => {
+  //   if (connector && baseUrl) {
+  //     QRCode.toDataURL(`${baseUrl}/clienthistory/${connector._id}`)
+  //       .then(data => {
+  //         setQr(data)
+  //       })
+  //   }
+  // }, [connector, baseUrl])
+
+  //====================================================================
+  //====================================================================
   // useEffect
 
   const [t, setT] = useState(0);
@@ -366,10 +381,68 @@ export const DoctorClients = () => {
     services: []
   })
   const handlePrint = (connector) => {
+    console.log(connector);
+    if (connector && baseUrl) {
+      QRCode.toDataURL(`${baseUrl}/clienthistory/${connector?.connector._id}`)
+        .then(data => {
+          setQr(data)
+        })
+    }
     setPrintBody(connector)
     setTimeout(() => {
       print()
     }, 1000)
+  }
+
+  //=====================================================================
+  //=====================================================================
+
+  const handleSendMessage = async (connectorId, clientId) => {
+    try {
+      const data = await request(
+        `/api/labaratory/client/message/send`,
+        "POST",
+        {
+          connectorId,
+          clientId
+        }
+      );
+      setDoctorClients([...searchStorage].map((connector) => {
+        if (connector.connector._id === connectorId) {
+          return {
+            ...connector,
+            connector: {
+              ...connector.connector,
+              isSended: true
+            }
+          }
+        }
+      }));
+      setCurrentDoctorClients(
+        [...searchStorage].map((connector) => {
+          if (connector.connector._id === connectorId) {
+            return {
+              ...connector,
+              connector: {
+                ...connector.connector,
+                isSended: true
+              }
+            }
+          }
+        }).slice(indexFirstConnector, indexLastConnector)
+      );
+      notify({
+        title: data.message,
+        description: "",
+        status: "success",
+      });
+    } catch (error) {
+      notify({
+        title: error,
+        description: "",
+        status: "error",
+      });
+    }
   }
 
   //=====================================================================
@@ -390,6 +463,7 @@ export const DoctorClients = () => {
             client={printBody.client}
             sections={printBody.services}
             clinica={clinicaDataSelect}
+            qr={qr}
           />
         </div>
       </div>
@@ -443,6 +517,7 @@ export const DoctorClients = () => {
               getDoctorClientsByClientBorn={getDoctorClientsByClientBorn}
               getDoctorClientsByProbirka={getDoctorClientsByProbirka}
               searchProbirka={searchProbirka}
+              handleSendMessage={handleSendMessage}
             />
           </div>
         </div>
