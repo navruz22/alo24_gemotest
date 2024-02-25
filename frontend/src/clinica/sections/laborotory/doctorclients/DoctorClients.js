@@ -407,30 +407,31 @@ export const DoctorClients = () => {
           clientId
         }
       );
-      setDoctorClients([...searchStorage].map((connector) => {
-        if (connector.connector._id === connectorId) {
-          return {
-            ...connector,
-            connector: {
-              ...connector.connector,
-              isSended: true
-            }
-          }
-        }
-      }));
-      setCurrentDoctorClients(
-        [...searchStorage].map((connector) => {
-          if (connector.connector._id === connectorId) {
-            return {
-              ...connector,
-              connector: {
-                ...connector.connector,
-                isSended: true
-              }
-            }
-          }
-        }).slice(indexFirstConnector, indexLastConnector)
-      );
+      // setDoctorClients([...searchStorage].map((connector) => {
+      //   if (connector.connector._id === connectorId) {
+      //     return {
+      //       ...connector,
+      //       connector: {
+      //         ...connector.connector,
+      //         isSended: true
+      //       }
+      //     }
+      //   }
+      // }));
+      // setCurrentDoctorClients(
+      //   [...searchStorage].map((connector) => {
+      //     if (connector.connector._id === connectorId) {
+      //       return {
+      //         ...connector,
+      //         connector: {
+      //           ...connector.connector,
+      //           isSended: true
+      //         }
+      //       }
+      //     }
+      //   }).slice(indexFirstConnector, indexLastConnector)
+      // );
+      getDoctorClients(beginDay, endDay, clinicaValue)
       notify({
         title: data.message,
         description: "",

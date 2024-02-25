@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.88c32bc0.css",
-    "main.js": "/static/js/main.a9e6819d.js",
+    "main.js": "/static/js/main.a866c581.js",
     "static/media/iconeyeon.png": "/static/media/iconeyeon.138663e759b58c48717e.png",
     "static/media/qrcode.png": "/static/media/qrcode.01bc3c1f59b2cd9fb111.png",
     "static/media/clinica_logo.jpg": "/static/media/clinica_logo.561ead35d9803a6adaa4.jpg",
@@ -10,10 +10,10 @@
     "index.html": "/index.html",
     "static/media/getFetch.cjs": "/static/media/getFetch.c780682470504fffbd04.cjs",
     "main.88c32bc0.css.map": "/static/css/main.88c32bc0.css.map",
-    "main.a9e6819d.js.map": "/static/js/main.a9e6819d.js.map"
+    "main.a866c581.js.map": "/static/js/main.a866c581.js.map"
   },
   "entrypoints": [
     "static/css/main.88c32bc0.css",
-    "static/js/main.a9e6819d.js"
+    "static/js/main.a866c581.js"
   ]
 }
