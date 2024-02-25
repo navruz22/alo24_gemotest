@@ -375,6 +375,23 @@ const Print = ({ client, connector, sections, baseUrl, clinica }) => {
                     </div>
                 </div>))}
             </div>
+            <div className='flex'>
+                <div className='col-4'>
+                    <div className="footer-info">
+                        <p className='text-start text-[14px] py-0 m-0'> Manzil: {clinica && clinica.address} </p>
+                        <p className='text-start text-[14px] py-0 m-0'> Tel: +998(93)310-94-22 <br />+998(79)220-13-46 </p>
+                        <p className='text-start text-[14px] py-0 m-0'> http://t.me/gemotestuz </p>
+                        <p className='text-start text-[14px] py-0 m-0'> Pochta indeksi: 210100 </p>
+                    </div>
+                </div>
+                <div className='col-3'>
+                    <p className='text-center' style={{ paddingTop: "35px" }}> Vrach: Iydiev B.T   _______________ </p>
+                    <p className='text-center fs-5 mt-4' > WWW.GEMO-TEST.UZ </p>
+                </div>
+                <div className='col-3'>
+                    <img width="150" src={baseUrl + '/api/upload/file/' + clinica?.image} />
+                </div>
+            </div>
         </div>
     )
 }
